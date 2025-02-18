@@ -1,12 +1,20 @@
-#! /usr/bin/sh
+#!/bin/bash
 
-# Create random string
-guid=$(cat /proc/sys/kernel/random/uuid)
-suffix=${guid//[-]/}
-suffix=${suffix:0:18}
+# Run PowerShell and save the result to a file
+pwsh -c "
+Install-Module -Name AzExpression -Force
+\$sub = (Get-AzContext).Subscription.Id
+\$sublabid = (az tag list --resource-id \"/subscriptions/\$sub\" --query \"properties.tags.LabInstance\" --output tsv)
+\$suffix = (New-AzUniqueString -InputStrings \$sublabid)
+\$suffix | Out-File -FilePath 'suffix.txt'
+"
+
+# Read the output from the file in Bash
+suffix=$(cat suffix.txt)
+echo "The suffix from PowerShell is: $suffix"
 
 # Set the necessary variables
-RESOURCE_GROUP="rg-dp100-l${suffix}"
+RESOURCE_GROUP="rg-dp100-l"
 REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
 RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
 WORKSPACE_NAME="mlw-dp100-l${suffix}"
