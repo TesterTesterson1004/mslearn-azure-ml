@@ -1,9 +1,13 @@
 #! /usr/bin/sh
 
-# Create random string
-guid=$(cat /proc/sys/kernel/random/uuid)
-suffix=${guid//[-]/}
-suffix=${suffix:0:18}
+suffix=$1
+
+if [[ -z "$suffix" ]]; then
+  echo "Usage: $0 <suffix>"
+  exit 1
+fi
+
+echo "Suffix passed: $suffix"
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-dp100-l${suffix}"
