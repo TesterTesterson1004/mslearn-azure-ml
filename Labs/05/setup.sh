@@ -1,13 +1,16 @@
 #! /usr/bin/sh
 
-suffix=$1
-
-if [[ -z "$suffix" ]]; then
-  echo "Usage: $0 <suffix>"
-  exit 1
+# Check if a suffix was passed as an argument
+if [[ -n "$1" ]]; then
+  suffix=$1
+else
+  # Generate random suffix from UUID if none was provided
+  guid=$(cat /proc/sys/kernel/random/uuid)
+  suffix=${guid//[-]/}
+  suffix=${suffix:0:18}
 fi
 
-echo "Suffix passed: $suffix"
+echo "Suffix: $suffix"
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-dp100-l${suffix}"
