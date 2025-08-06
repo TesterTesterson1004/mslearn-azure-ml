@@ -14,7 +14,6 @@ echo "Suffix: $suffix"
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-dp100-l${suffix}"
-#!/usr/bin/env bash
 
 # Define available regions
 REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
@@ -29,14 +28,14 @@ read -p "Enter the number of the region you want to use (or press Enter for rand
 
 # If input is valid, use that region; otherwise, pick randomly
 if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 0 && choice < ${#REGIONS[@]} )); then
-  SELECTED_REGION=${REGIONS[$choice]}
+  RANDOM_REGION=${REGIONS[$choice]}
 else
-  SELECTED_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
-  echo "No valid selection made. Using random region: $SELECTED_REGION"
+  RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
+  echo "No valid selection made. Using random region: RANDOM_REGION"
 fi
 
 # Output selected region
-echo "Selected region: $SELECTED_REGION"
+echo "Selected region: $RANDOM_REGION"
 WORKSPACE_NAME="mlw-dp100-l${suffix}"
 COMPUTE_INSTANCE="ci${suffix}"
 COMPUTE_CLUSTER="aml-cluster"
