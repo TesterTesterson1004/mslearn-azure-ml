@@ -14,8 +14,29 @@ echo "Suffix: $suffix"
 
 # Set the necessary variables
 RESOURCE_GROUP="rg-dp100-l${suffix}"
+#!/usr/bin/env bash
+
+# Define available regions
 REGIONS=("eastus" "westus" "centralus" "northeurope" "westeurope")
-RANDOM_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
+
+echo "Available Azure Regions:"
+for i in "${!REGIONS[@]}"; do
+  echo "  [$i] ${REGIONS[$i]}"
+done
+
+# Prompt user for input
+read -p "Enter the number of the region you want to use (or press Enter for random): " choice
+
+# If input is valid, use that region; otherwise, pick randomly
+if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 0 && choice < ${#REGIONS[@]} )); then
+  SELECTED_REGION=${REGIONS[$choice]}
+else
+  SELECTED_REGION=${REGIONS[$RANDOM % ${#REGIONS[@]}]}
+  echo "No valid selection made. Using random region: $SELECTED_REGION"
+fi
+
+# Output selected region
+echo "Selected region: $SELECTED_REGION"
 WORKSPACE_NAME="mlw-dp100-l${suffix}"
 COMPUTE_INSTANCE="ci${suffix}"
 COMPUTE_CLUSTER="aml-cluster"
